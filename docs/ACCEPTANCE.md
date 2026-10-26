@@ -52,8 +52,17 @@ The release gate passes only when every applicable criterion below has been veri
 
 Update this section only when new evidence is available.
 
-- Source compilation: previously reported passing; rerun if the source changes.
-- Automated tests: previously reported 31 passed, 1 skipped; rerun if the source or tests change.
+### 2026-10-26, commit b2d6213, fresh `git clone` + new venv
+Environment: Linux, Python 3.12.3, `pip install -e ".[test]"`. Windows and Python 3.10 not tested.
+
+- Gate 1 `python -m py_compile src/harness.py`: exit 0 (observed).
+- Gate 2 `python -m pytest -q -p no:cacheprovider tests`: exit 0, 32 passed, 0 skipped (observed). The earlier record shows 31 passed, 1 skipped; the difference is likely a platform-dependent skip and was not investigated.
+- Gate 9 (partial): README quick-start commands (install, compile, pytest, `python -m harness --help`) ran as written on Linux only.
+- Gates 3-8: not independently verified in this pass. Existing tests may cover some; they were not mapped to criteria.
+- CI workflow added but not yet executed on GitHub.
+- Day-30 gate: baseline tag created locally (see CONTRIBUTING.md); at least 10 regression tests exist (32). "No known critical safety regression" not assessed.
+- Day-60 / Day-90 criteria: **not measured.** Real-world time savings: **not measured.**
+
+### Previously reported (unverified here)
+- Automated tests: 31 passed, 1 skipped.
 - Release gate: **Not yet fully verified.**
-- Clean-checkout reproducibility: **Not yet verified.**
-- Real-world time savings: **Not yet measured.**

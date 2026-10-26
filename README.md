@@ -13,3 +13,24 @@ A local-first Python tool for structured engineering analysis, bounded project c
 
 ## System Requirements & Setup
 - Python 3.10+, Git 2.25+, pytest, Ollama or OpenRouter.
+
+## Quick Start
+```
+python -m venv .venv
+# Windows PowerShell: .venv\Scripts\Activate.ps1    macOS/Linux: source .venv/bin/activate
+pip install -e ".[test]"
+python -m pytest -q
+python -m harness --help
+```
+
+## Project Checks
+`verify` runs only commands you list in `.harness-checks.json` (gitignored).
+Copy `.harness-checks.example.json` to get started.
+
+## Development
+See [CONTRIBUTING.md](CONTRIBUTING.md) for branch, commit, tag and rollback
+conventions. Enable the tracked hook once per clone:
+```
+git config core.hooksPath .githooks
+```
+Design decisions: `docs/DECISIONS.md`. Acceptance criteria and evidence: `docs/ACCEPTANCE.md`.

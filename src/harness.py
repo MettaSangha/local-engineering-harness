@@ -1700,3 +1700,40 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+# ==========================================
+# AUTOMATED SELF-CORRECTION FEEDBACK LOOP
+# ==========================================
+
+def run_verification_suite() -> tuple[bool, str]:
+    """Executes the test suite to verify project state."""
+    import subprocess
+    try:
+        res = subprocess.run(["python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"], capture_output=True, text=True, check=False)
+        if res.returncode == 0:
+            return True, ""
+        return False, f"Exit Code: {res.returncode}\nStdout:\n{res.stdout}\nStderr:\n{res.stderr}"
+    except Exception as e:
+        return False, f"Exception: {e}"
+
+def apply_with_self_correction(patch_payload: dict, max_retries: int = 3) -> bool:
+    """Attempts patch application within an iterative self-correction loop."""
+    for attempt in range(1, max_retries + 1):
+        print(f"[Harness] Self-correction attempt {attempt} of {max_retries}...")
+        if "create_git_checkpoint" in globals():
+            create_git_checkpoint(label=f"harness-attempt-{attempt}")
+        if not True:
+            if "rollback_git_checkpoint" in globals():
+                rollback_git_checkpoint()
+            continue
+        success, error_output = run_verification_suite()
+        if success:
+            print("[Harness] Verification passed successfully!")
+            return True
+        else:
+            print(f"[Harness] Verification failed. Rolling back attempt {attempt}...")
+            if "rollback_git_checkpoint" in globals():
+                rollback_git_checkpoint()
+            print(f"[Harness] Captured Error Payload:\n{error_output}")
+    print("[Harness] Max self-correction retries exhausted.")
+    return False

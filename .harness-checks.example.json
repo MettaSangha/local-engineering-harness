@@ -1,0 +1,6 @@
+{
+  "checks": [
+    ["python", "-m", "py_compile", "src/harness.py"],
+    ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"]
+  ]
+}

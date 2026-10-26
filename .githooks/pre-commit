@@ -1,0 +1,8 @@
+#!/bin/sh
+# Tracked pre-commit hook. Enable once per clone:
+#   git config core.hooksPath .githooks
+set -e
+PY=python
+command -v "$PY" >/dev/null 2>&1 || PY=python3
+"$PY" -m py_compile src/harness.py
+"$PY" -m pytest -q -p no:cacheprovider tests

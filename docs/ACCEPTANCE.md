@@ -53,15 +53,22 @@ The release gate passes only when every applicable criterion below has been veri
 Update this section only when new evidence is available.
 
 ### 2026-10-26, commit b2d6213, fresh `git clone` + new venv
-Environment: Linux, Python 3.12.3, `pip install -e ".[test]"`. Windows and Python 3.10 not tested.
+Environment: Linux, Python 3.12.3, `pip install -e ".[test]"`. Python 3.10 not tested.
 
 - Gate 1 `python -m py_compile src/harness.py`: exit 0 (observed).
-- Gate 2 `python -m pytest -q -p no:cacheprovider tests`: exit 0, 32 passed, 0 skipped (observed). The earlier record shows 31 passed, 1 skipped; the difference is likely a platform-dependent skip and was not investigated.
+- Gate 2 `python -m pytest -q -p no:cacheprovider tests`: exit 0, 32 passed, 0 skipped (observed). The earlier record shows 31 passed, 1 skipped; the Windows run below shows the same counts and names the skipped test.
 - Gate 9 (partial): README quick-start commands (install, compile, pytest, `python -m harness --help`) ran as written on Linux only.
 - Gates 3-8: not independently verified in this pass. Existing tests may cover some; they were not mapped to criteria.
 - CI workflow added but not yet executed on GitHub.
 - Day-30 gate: baseline tag created locally (see CONTRIBUTING.md); at least 10 regression tests exist (32). "No known critical safety regression" not assessed.
 - Day-60 / Day-90 criteria: **not measured.** Real-world time savings: **not measured.**
+
+### 2026-10-26, commit 0f369a4, owner's Windows machine (from the owner's terminal log)
+Environment: Windows (win32), Python 3.14.2, pytest 9.1.1, existing working directory (not a fresh clone).
+
+- `python -m pytest -q`: 31 passed, 1 skipped, 1 warning (observed in the log; exit code not shown).
+- Skipped test: `test_safe_path_rejects_symlink`, reason "Symlink creation is unavailable in this environment". Symlink rejection (gate 3) is therefore **untested on this machine**; enabling Windows Developer Mode or running elevated would let it run.
+- Warning: `PytestCacheWarning` on `.pytest_cache` (WinError 183). An earlier `Copy-Item` also got "Access denied" on that directory. Likely a permissions problem on the folder; tests pass with `-p no:cacheprovider`.
 
 ### Previously reported (unverified here)
 - Automated tests: 31 passed, 1 skipped.
